@@ -1,0 +1,627 @@
+{
+  "role_key": "aisys-v4-work-management-service",
+  "role_name": "aisys-v4-work-management-service",
+  "role_title": "AIsys V4 Work Management Service",
+  "grants": [
+    {
+      "resource": "registered_machines",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "machine_key",
+            "machine_token_hash",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "agent_credentials",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "agent_id",
+            "credential_key",
+            "expires_at",
+            "status",
+            "token_hash"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "agents",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "agent_key",
+            "name",
+            "platform",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "projects",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_key",
+            "name",
+            "code",
+            "owner_id",
+            "goal",
+            "current_summary",
+            "next_action",
+            "blocker",
+            "status",
+            "lifecycle_status",
+            "started_at",
+            "completed_at",
+            "final_result_summary",
+            "parent_project_id",
+            "created_via",
+            "created_by_credential_key",
+            "created_by_machine_key",
+            "stage_model_id",
+            "category",
+            "periodic_report_kind"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "project_key",
+            "name",
+            "code",
+            "owner_id",
+            "goal",
+            "current_summary",
+            "next_action",
+            "status",
+            "lifecycle_status",
+            "parent_project_id",
+            "created_via",
+            "created_by_credential_key",
+            "created_by_machine_key",
+            "stage_model_id",
+            "category"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "lifecycle_status",
+            "status",
+            "completed_at"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_members",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "project_id",
+            "agent_id",
+            "member_role"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_reports",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_id",
+            "submitted_by_id",
+            "report_type",
+            "summary",
+            "next_action",
+            "blocker",
+            "result_summary",
+            "deliverable_references",
+            "details",
+            "submitted_at",
+            "attachments",
+            "structured",
+            "structured_schema_version"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "project_id",
+            "submitted_by_id",
+            "report_type",
+            "summary",
+            "result_summary",
+            "submitted_at",
+            "attachments"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_stage_models",
+      "_why": "Owner-authored reference data (framework by Owner, stations filled in later by the business line). No role -- including this one -- gets write access; it is edited only through the NocoBase admin UI.",
+      "_only_actions": true,
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "model_key",
+            "name",
+            "description",
+            "stages",
+            "version",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_stage_events",
+      "_why": "GET /api/work-management projects stage_track (per-station first-entry timestamps and the event list) from these rows. Written only through POST /api/agent-stage-events under the separate Report Writer service identity -- this role is read-only.",
+      "_only_actions": true,
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_id",
+            "stage_code",
+            "station_code",
+            "entered_at",
+            "recorded_at",
+            "note",
+            "submitted_by_id",
+            "backfilled"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "attachments",
+      "_why": "The Owner's browser upload on the Report detail page (POST /api/project-reports/{id}/attachments) stores the file on the Owner's behalf, exactly the way the credential-resolved Agent path already does through the separate Report Writer service identity. It never deletes or updates one, so create and view are the only actions.",
+      "_meta_why": "meta is NocoBase's own JSON column on the file-manager attachments collection. sha256 is written to it as an ordinary extra multipart field at upload time; the field cannot persist unless meta itself is in this allowlist.",
+      "_url_why": "url and preview are NocoBase getters computed from storageId and path against the storage engine record, not plain columns; verified empirically that omitting storageId/path from this allowlist makes url resolve to null even for an attachment just uploaded through this same role. See bootstrap/report-writer-acl.json's matching note.",
+      "actions": [
+        {
+          "name": "create",
+          "fields": [
+            "filename",
+            "url",
+            "size",
+            "mimetype",
+            "storageId",
+            "title",
+            "meta"
+          ]
+        },
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "filename",
+            "url",
+            "size",
+            "mimetype",
+            "createdAt",
+            "meta",
+            "storageId",
+            "path"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "releases",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "version",
+            "commit",
+            "deployed_at",
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_tasks",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "task_key",
+            "title",
+            "summary",
+            "status",
+            "project_id",
+            "holder_agent_id",
+            "holder_type",
+            "holder_label",
+            "due_at",
+            "completed_at",
+            "completion_fact",
+            "source_reference",
+            "promoted_project_id",
+            "code"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "task_key",
+            "title",
+            "summary",
+            "status",
+            "project_id",
+            "holder_agent_id",
+            "holder_type",
+            "holder_label",
+            "due_at",
+            "source_reference",
+            "promoted_project_id",
+            "code"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "title",
+            "summary",
+            "status",
+            "project_id",
+            "holder_agent_id",
+            "holder_type",
+            "holder_label",
+            "due_at",
+            "completed_at",
+            "completion_fact",
+            "source_reference",
+            "promoted_project_id"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_requests",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "request_key",
+            "title",
+            "summary",
+            "direction",
+            "status",
+            "project_id",
+            "waiting_party_type",
+            "waiting_party",
+            "waiting_since",
+            "hard_deadline",
+            "linked_task_id",
+            "completed_at",
+            "result",
+            "source_reference",
+            "promoted_project_id"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "request_key",
+            "title",
+            "summary",
+            "direction",
+            "status",
+            "project_id",
+            "waiting_party_type",
+            "waiting_party",
+            "waiting_since",
+            "hard_deadline",
+            "linked_task_id",
+            "source_reference",
+            "promoted_project_id"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "title",
+            "summary",
+            "direction",
+            "status",
+            "project_id",
+            "waiting_party_type",
+            "waiting_party",
+            "waiting_since",
+            "hard_deadline",
+            "linked_task_id",
+            "completed_at",
+            "result",
+            "source_reference",
+            "promoted_project_id"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_follow_ups",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "request_id",
+            "followed_at",
+            "target",
+            "method",
+            "note"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "request_id",
+            "followed_at",
+            "target",
+            "method",
+            "note"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_formal_records",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "record_key",
+            "record_type",
+            "title",
+            "status",
+            "project_id",
+            "task_id",
+            "request_id",
+            "project_report_id",
+            "occurred_at",
+            "from_party",
+            "to_party",
+            "source_reference",
+            "formal_location",
+            "artifact_version",
+            "milestone_id",
+            "submission_at",
+            "submission_to",
+            "decision_maker",
+            "approval_result",
+            "approval_number",
+            "basis",
+            "recorded_by_type"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "record_key",
+            "record_type",
+            "title",
+            "status",
+            "project_id",
+            "task_id",
+            "request_id",
+            "project_report_id",
+            "occurred_at",
+            "from_party",
+            "to_party",
+            "source_reference",
+            "formal_location",
+            "artifact_version",
+            "milestone_id",
+            "submission_at",
+            "submission_to",
+            "decision_maker",
+            "approval_result",
+            "approval_number",
+            "basis",
+            "recorded_by_type"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "title",
+            "status",
+            "occurred_at",
+            "from_party",
+            "to_party",
+            "source_reference",
+            "formal_location",
+            "artifact_version",
+            "milestone_id",
+            "submission_at",
+            "submission_to",
+            "decision_maker",
+            "approval_result",
+            "approval_number",
+            "basis"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_progress_events",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_id",
+            "fact_type",
+            "occurred_at",
+            "source_collection",
+            "source_id",
+            "note"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "project_id",
+            "fact_type",
+            "occurred_at",
+            "source_collection",
+            "source_id",
+            "note"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "mail_settings",
+      "_why": "Owner-managed mail configuration page (mail-settings-page-v1). password_encrypted is included in view/create/update because the web app itself must read the ciphertext to decrypt it server-side for sendMail()/testConnection() -- no API route ever forwards password_encrypted's value back to a browser response; see docs/mail-settings.md.",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "host",
+            "port",
+            "starttls",
+            "username",
+            "password_encrypted",
+            "from_address",
+            "default_cc",
+            "daily_limit",
+            "tls_insecure",
+            "updated_at",
+            "updated_by"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "id",
+            "host",
+            "port",
+            "starttls",
+            "username",
+            "password_encrypted",
+            "from_address",
+            "default_cc",
+            "daily_limit",
+            "tls_insecure",
+            "updated_at",
+            "updated_by"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "host",
+            "port",
+            "starttls",
+            "username",
+            "password_encrypted",
+            "from_address",
+            "default_cc",
+            "daily_limit",
+            "tls_insecure",
+            "updated_at",
+            "updated_by"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "mail_deliveries",
+      "_why": "Delivery audit trail for the mail settings page's 最近发送记录 table and the daily send-limit count (mail-settings-page-v1). No update/delete action: a delivery record is append-only evidence of what was actually sent.",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "created_at",
+            "source",
+            "batch_id",
+            "recipient",
+            "cc",
+            "subject",
+            "status",
+            "error",
+            "message_id",
+            "recipient_source"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "created_at",
+            "source",
+            "batch_id",
+            "recipient",
+            "cc",
+            "subject",
+            "status",
+            "error",
+            "message_id",
+            "recipient_source"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "work_closeout_dispositions",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_id",
+            "task_id",
+            "request_id",
+            "disposition",
+            "target_project_id",
+            "recorded_at",
+            "note"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "project_id",
+            "task_id",
+            "request_id",
+            "disposition",
+            "target_project_id",
+            "recorded_at",
+            "note"
+          ]
+        }
+      ]
+    }
+  ]
+}

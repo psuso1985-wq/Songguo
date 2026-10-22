@@ -1,0 +1,99 @@
+# Standalone file: never combine with the inherited deployment Compose file.
+name: ${PRIVATE_PROJECT:?Use tools/private-install.mjs}
+x-labels: &labels
+  io.songguo.private-instance: ${PRIVATE_INSTANCE_ID:?Use tools/private-install.mjs}
+x-bootstrap-env: &bootstrap-env
+  NOCOBASE_URL: http://nocobase:80
+  INIT_ROOT_EMAIL: ${INIT_ROOT_EMAIL:?}
+  INIT_ROOT_PASSWORD: ${INIT_ROOT_PASSWORD:?}
+  AISYS_BOOTSTRAP_SEED: "false"
+  AISYS_CREDENTIAL_PEPPER: ${AISYS_CREDENTIAL_PEPPER:?}
+  APP_COMMIT: ${APP_COMMIT:?}
+services:
+  postgres:
+    image: postgres:16.4-alpine
+    labels: *labels
+    restart: unless-stopped
+    command: postgres -c wal_level=logical
+    environment:
+      POSTGRES_DB: songguo_private
+      POSTGRES_USER: songguo_private
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+    healthcheck:
+      test: [CMD-SHELL, pg_isready -U songguo_private -d songguo_private]
+      interval: 3s
+      timeout: 5s
+      retries: 40
+    volumes:
+      - ${PRIVATE_INSTANCE_DIR:?}/postgres:/var/lib/postgresql/data
+  nocobase:
+    image: nocobase/nocobase:2.0.60-full
+    labels: *labels
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: production
+      APP_KEY: ${APP_KEY:?}
+      API_BASE_PATH: /api/
+      TZ: UTC
+      INIT_ROOT_EMAIL: ${INIT_ROOT_EMAIL:?}
+      INIT_ROOT_PASSWORD: ${INIT_ROOT_PASSWORD:?}
+      DB_DIALECT: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: songguo_private
+      DB_USER: songguo_private
+      DB_PASSWORD: ${POSTGRES_PASSWORD:?}
+    ports: ["127.0.0.1:${PRIVATE_BACKEND_PORT:?}:80"]
+    volumes:
+      - ${PRIVATE_INSTANCE_DIR:?}/nocobase:/app/nocobase/storage
+  bootstrap:
+    image: node:22.14.0-alpine
+    user: ${PRIVATE_UID:?}:${PRIVATE_GID:?}
+    labels: *labels
+    profiles: [setup]
+    environment: *bootstrap-env
+    volumes:
+      - ./bootstrap:/bootstrap:ro
+      - ${PRIVATE_INSTANCE_DIR:?}/backups:/backups
+      - ${PRIVATE_INSTANCE_DIR:?}/secrets:/private-secrets
+    command: [node, /bootstrap/apply-phase-1.mjs]
+  schema-guard:
+    image: postgres:16.4-alpine
+    labels: *labels
+    profiles: [setup]
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: songguo_private
+      PGUSER: songguo_private
+      PGPASSWORD: ${POSTGRES_PASSWORD:?}
+    volumes:
+      - ./bootstrap/migrations:/migrations:ro
+      - ./bootstrap/verify-physical-indexes.sql:/verify-physical-indexes.sql:ro
+    command: [sh, -ec, 'for f in /migrations/*.sql; do psql -v ON_ERROR_STOP=1 -f "$$f"; done; psql -v ON_ERROR_STOP=1 -f /verify-physical-indexes.sql']
+  web:
+    image: ${PRIVATE_WEB_IMAGE:?}
+    labels: *labels
+    profiles: [web]
+    restart: unless-stopped
+    env_file:
+      - path: ${PRIVATE_INSTANCE_DIR:?}/secrets/workspace-service.env
+        required: false
+    environment:
+      NOCOBASE_URL: http://nocobase:80
+      AISYS_PRODUCT_MODE: workspace
+      AISYS_TRUSTED_INTERNAL_DEPLOYMENT: "false"
+      AISYS_WORKSPACE_SESSION_KEY_FILE: /run/secrets/workspace-session.key
+      AISYS_ALLOW_INSECURE_LOCAL_AUTH: "true"
+      AISYS_CREDENTIAL_PEPPER: ${AISYS_CREDENTIAL_PEPPER:?}
+      AISYS_PUBLIC_BASE_URL: http://127.0.0.1:${PRIVATE_WEB_PORT:?}
+    ports: ["127.0.0.1:${PRIVATE_WEB_PORT:?}:3000"]
+    volumes:
+      - ${PRIVATE_INSTANCE_DIR:?}/backups:/app/backups:ro
+      - ${PRIVATE_INSTANCE_DIR:?}/secrets/workspace-session.key:/run/secrets/workspace-session.key:ro
+networks:
+  default:
+    labels: *labels

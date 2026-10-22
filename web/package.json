@@ -1,0 +1,42 @@
+{
+  "name": "songguo-workspace-web",
+  "private": true,
+  "version": "0.1.0-rc.1",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "typecheck": "tsc --noEmit",
+    "test:workspace-v1": "node scripts/test-real-workspace-v1.mjs",
+    "test:workspace-v1-model": "node --experimental-strip-types scripts/test-workspace-v1-model.mjs",
+    "test:workspace-workline": "node --experimental-strip-types scripts/test-workspace-workline.mjs",
+    "test:workspace-acl": "node scripts/test-workspace-acl.mjs",
+    "test:workspace-provision": "node scripts/test-workspace-provision.mjs",
+    "test:workspace-history-contract": "node scripts/test-workspace-history-contract.mjs",
+    "test:workspace-public-profile": "node scripts/test-workspace-public-profile.mjs",
+    "test:workspace-v1-browser": "playwright test --config workspace.playwright.config.ts",
+    "test:public-methods": "node scripts/test-public-methods-copy.mjs",
+    "test:workspace-integration": "node --experimental-strip-types scripts/test-workspace-integration.mjs"
+  },
+  "dependencies": {
+    "next": "15.5.27",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.15.30",
+    "@types/react": "19.1.4",
+    "@types/react-dom": "19.1.5",
+    "typescript": "5.8.3"
+  },
+  "overrides": {
+    "postcss": "8.5.28",
+    "sharp": "0.35.5",
+    "source-map-js": "1.2.2"
+  }
+}

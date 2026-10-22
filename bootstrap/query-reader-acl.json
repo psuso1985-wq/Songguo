@@ -1,0 +1,165 @@
+{
+  "role_key": "aisys-phase1-reader",
+  "role_title": "AIsys Phase 1 Query Reader",
+  "existing_read_resources": [
+    "agents",
+    "project_members",
+    "project_reports",
+    "skills",
+    "agent_skills"
+  ],
+  "grants": [
+    {
+      "resource": "projects",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "blocker",
+            "category",
+            "code",
+            "completed_at",
+            "createdAt",
+            "createdBy",
+            "current_summary",
+            "final_result_summary",
+            "goal",
+            "id",
+            "lifecycle_status",
+            "members",
+            "name",
+            "next_action",
+            "next_check_at",
+            "owner",
+            "owner_id",
+            "parent_project",
+            "parent_project_id",
+            "phase",
+            "priority",
+            "project_key",
+            "reports",
+            "source_skills",
+            "stage_model_id",
+            "started_at",
+            "status",
+            "updatedAt",
+            "updatedBy",
+            "waiting_since",
+            "work_closeout_dispositions",
+            "work_records",
+            "work_requests",
+            "work_tasks"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "releases",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "version",
+            "commit",
+            "deployed_at",
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "inspirations",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "title",
+            "source",
+            "content",
+            "conversation",
+            "status",
+            "captured_at",
+            "promoted_project_id",
+            "createdAt"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "team_members",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "name",
+            "department",
+            "role_title",
+            "grade",
+            "member_type",
+            "status",
+            "effective_date",
+            "moved_to",
+            "source_note",
+            "sort_order"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "org_notices",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "notice_no",
+            "title",
+            "content",
+            "effective_from",
+            "expires_at",
+            "audience",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_stage_models",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "model_key",
+            "name",
+            "description",
+            "stages",
+            "version",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_stage_events",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "project_id",
+            "stage_code",
+            "station_code",
+            "entered_at",
+            "recorded_at",
+            "note",
+            "submitted_by_id",
+            "backfilled"
+          ]
+        }
+      ]
+    }
+  ]
+}

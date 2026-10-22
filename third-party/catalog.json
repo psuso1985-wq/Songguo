@@ -1,0 +1,138 @@
+{
+  "version": 1,
+  "scope": "Unmodified attribution texts for direct framework/build/test dependencies referenced by the source package. Dependency implementations, platform-native variants and container images are not distributed here.",
+  "generated_declaration": "web/next-env.d.ts contains Next-generated type references; Next MIT text is retained.",
+  "original_code_license_does_not_apply_to_this_directory": true,
+  "packages": [
+    {
+      "package": "next",
+      "version": "15.5.27",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/vercel/next.js",
+      "package_source": "https://registry.npmjs.org/next/-/next-15.5.27.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/next.txt",
+          "sha256": "ee765244e2d59f5234d474f62e0766fa0c8b99af967fdd4c0cb8dcb0c76ea224",
+          "upstream_filename": "license.md"
+        }
+      ]
+    },
+    {
+      "package": "react",
+      "version": "19.1.0",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/facebook/react",
+      "package_source": "https://registry.npmjs.org/react/-/react-19.1.0.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/react.txt",
+          "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+          "upstream_filename": "LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "react-dom",
+      "version": "19.1.0",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/facebook/react",
+      "package_source": "https://registry.npmjs.org/react-dom/-/react-dom-19.1.0.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/react.txt",
+          "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93",
+          "upstream_filename": "LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "@playwright/test",
+      "version": "1.63.0",
+      "declared_license": "Apache-2.0",
+      "upstream": "https://github.com/microsoft/playwright",
+      "package_source": "https://registry.npmjs.org/@playwright/test/-/test-1.63.0.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/playwright-license.txt",
+          "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+          "upstream_filename": "LICENSE"
+        },
+        {
+          "path": "licenses/playwright-notice.txt",
+          "sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+          "upstream_filename": "NOTICE"
+        }
+      ]
+    },
+    {
+      "package": "@types/node",
+      "version": "22.15.30",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+      "package_source": "https://registry.npmjs.org/@types/node/-/node-22.15.30.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/definitelytyped.txt",
+          "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+          "upstream_filename": "LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "@types/react",
+      "version": "19.1.4",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+      "package_source": "https://registry.npmjs.org/@types/react/-/react-19.1.4.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/definitelytyped.txt",
+          "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+          "upstream_filename": "LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "@types/react-dom",
+      "version": "19.1.5",
+      "declared_license": "MIT",
+      "upstream": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+      "package_source": "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.1.5.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/definitelytyped.txt",
+          "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383",
+          "upstream_filename": "LICENSE"
+        }
+      ]
+    },
+    {
+      "package": "typescript",
+      "version": "5.8.3",
+      "declared_license": "Apache-2.0",
+      "upstream": "https://github.com/microsoft/TypeScript",
+      "package_source": "https://registry.npmjs.org/typescript/-/typescript-5.8.3.tgz",
+      "implementations_bundled": false,
+      "license_texts": [
+        {
+          "path": "licenses/typescript-license.txt",
+          "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47",
+          "upstream_filename": "LICENSE.txt"
+        },
+        {
+          "path": "licenses/typescript-third-party-notices.txt",
+          "sha256": "1af3c68039c57e539422da82a4faada506ce6d0ea6f90e0b699d02dbcdb7a90c",
+          "upstream_filename": "ThirdPartyNoticeText.txt"
+        }
+      ]
+    }
+  ]
+}

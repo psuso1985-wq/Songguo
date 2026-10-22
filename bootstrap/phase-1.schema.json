@@ -1,0 +1,2486 @@
+{
+  "version": 11,
+  "nocobaseVersion": "2.0.60",
+  "collections": [
+    {
+      "name": "agents",
+      "title": "Agents",
+      "indexes": [
+        {
+          "name": "agents_agent_key_uk",
+          "fields": [
+            "agent_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "agent_key",
+          "Stable Agent ID",
+          true
+        ],
+        [
+          "name",
+          "Name",
+          true
+        ],
+        [
+          "platform",
+          "Platform",
+          true,
+          [
+            "CODEX",
+            "CLAUDE_CODE",
+            "GPT",
+            "OTHER"
+          ]
+        ],
+        [
+          "agent_type",
+          "Agent type",
+          true,
+          [
+            "LONG_LIVED",
+            "PROJECT",
+            "TEMPORARY",
+            "OTHER"
+          ]
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "ACTIVE",
+            "PAUSED",
+            "ARCHIVED"
+          ]
+        ],
+        [
+          "role_title",
+          "Role title",
+          false
+        ],
+        [
+          "responsibilities",
+          "Core responsibilities",
+          true,
+          "text"
+        ],
+        [
+          "decision_authority",
+          "Decision authority",
+          false,
+          "text"
+        ],
+        [
+          "escalation_requirements",
+          "Escalation requirements",
+          false,
+          "text"
+        ],
+        [
+          "prohibited_actions",
+          "Prohibited actions",
+          false,
+          "text"
+        ],
+        [
+          "role_card_locator",
+          "Role card locator",
+          false
+        ],
+        [
+          "standard_inputs",
+          "Standard inputs",
+          false,
+          "text"
+        ],
+        [
+          "standard_outputs",
+          "Standard outputs",
+          false,
+          "text"
+        ],
+        {
+          "name": "reports_to",
+          "title": "Reports to",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "reports_to_id",
+          "targetKey": "id",
+          "allowNull": true
+        }
+      ],
+      "inverses": [
+        {
+          "name": "direct_reports",
+          "title": "Direct reports",
+          "type": "hasMany",
+          "target": "agents",
+          "foreignKey": "reports_to_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "projects",
+      "title": "Projects",
+      "indexes": [
+        {
+          "name": "projects_project_key_uk",
+          "fields": [
+            "project_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "project_key",
+          "Stable Project ID",
+          true
+        ],
+        [
+          "name",
+          "Name",
+          true
+        ],
+        {
+          "name": "owner",
+          "title": "Owner",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "owner_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        {
+          "name": "parent_project",
+          "title": "Parent project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "parent_project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "PLANNED",
+            "ACTIVE",
+            "PAUSED",
+            "BLOCKED",
+            "WAITING_OWNER",
+            "COMPLETED",
+            "CANCELLED",
+            "ARCHIVED"
+          ]
+        ],
+        [
+          "lifecycle_status",
+          "V4 lifecycle status",
+          false,
+          [
+            "ACTIVE",
+            "CLOSING",
+            "COMPLETED",
+            "CANCELLED",
+            "ARCHIVED"
+          ]
+        ],
+        [
+          "phase",
+          "Phase",
+          false,
+          [
+            "DISCOVERY",
+            "BUILD",
+            "VALIDATION",
+            "OPERATING",
+            "CLOSED"
+          ]
+        ],
+        [
+          "priority",
+          "Priority",
+          false,
+          [
+            "LOW",
+            "NORMAL",
+            "HIGH",
+            "CRITICAL"
+          ]
+        ],
+        [
+          "goal",
+          "Goal",
+          false,
+          "text"
+        ],
+        [
+          "current_summary",
+          "Current summary",
+          true,
+          "text"
+        ],
+        [
+          "next_action",
+          "Next action",
+          false,
+          "text"
+        ],
+        [
+          "blocker",
+          "Blocker",
+          false,
+          "text"
+        ],
+        {
+          "name": "next_check_at",
+          "title": "Next check at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "waiting_since",
+          "title": "Waiting since",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "started_at",
+          "title": "Started at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "completed_at",
+          "title": "Completed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        [
+          "final_result_summary",
+          "Final result summary",
+          false,
+          "text"
+        ]
+      ],
+      "inverses": [
+        {
+          "name": "members",
+          "title": "Members",
+          "type": "hasMany",
+          "target": "project_members",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "reports",
+          "title": "Reports",
+          "type": "hasMany",
+          "target": "project_reports",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "source_skills",
+          "title": "Source skills",
+          "type": "hasMany",
+          "target": "skills",
+          "foreignKey": "source_project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "work_tasks",
+          "title": "V4 Tasks",
+          "type": "hasMany",
+          "target": "work_tasks",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "work_requests",
+          "title": "V4 Requests",
+          "type": "hasMany",
+          "target": "work_requests",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "work_records",
+          "title": "V4 formal records",
+          "type": "hasMany",
+          "target": "work_formal_records",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "work_closeout_dispositions",
+          "title": "V4 closeout dispositions",
+          "type": "hasMany",
+          "target": "work_closeout_dispositions",
+          "foreignKey": "project_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "skills",
+      "title": "Skills",
+      "indexes": [
+        {
+          "name": "skills_skill_key_uk",
+          "fields": [
+            "skill_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "skill_key",
+          "Stable Skill ID",
+          true
+        ],
+        [
+          "name",
+          "Name",
+          true
+        ],
+        [
+          "description",
+          "Description",
+          true,
+          "text"
+        ],
+        [
+          "locator",
+          "Locator",
+          true
+        ],
+        {
+          "name": "source_project",
+          "title": "Source project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "source_project_id",
+          "targetKey": "id",
+          "allowNull": true
+        },
+        [
+          "version",
+          "Version",
+          false
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "ACTIVE",
+            "DRAFT",
+            "DEPRECATED",
+            "ARCHIVED"
+          ]
+        ],
+        {
+          "name": "last_verified_at",
+          "title": "Last verified at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        }
+      ],
+      "inverses": [
+        {
+          "name": "agent_relations",
+          "title": "Agent relations",
+          "type": "hasMany",
+          "target": "agent_skills",
+          "foreignKey": "skill_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "project_members",
+      "title": "Project members",
+      "indexes": [
+        {
+          "name": "project_members_project_id_agent_id_uk",
+          "fields": [
+            "project_id",
+            "agent_id"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        {
+          "name": "agent",
+          "title": "Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "agent_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        [
+          "member_role",
+          "Member role",
+          true,
+          [
+            "CONTRIBUTOR",
+            "REVIEWER",
+            "OBSERVER"
+          ]
+        ],
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ]
+    },
+    {
+      "name": "project_reports",
+      "title": "Project reports",
+      "fields": [
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        {
+          "name": "submitted_by",
+          "title": "Submitted by",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "submitted_by_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        [
+          "report_type",
+          "Report type",
+          true,
+          [
+            "PROGRESS",
+            "COMPLETION",
+            "CORRECTION",
+            "DECISION"
+          ]
+        ],
+        [
+          "summary",
+          "Summary",
+          true,
+          "text"
+        ],
+        [
+          "next_action",
+          "Next action",
+          false,
+          "text"
+        ],
+        [
+          "blocker",
+          "Blocker",
+          false,
+          "text"
+        ],
+        [
+          "result_summary",
+          "Result summary",
+          false,
+          "text"
+        ],
+        [
+          "deliverable_references",
+          "Deliverable references",
+          false,
+          "text"
+        ],
+        {
+          "name": "submitted_at",
+          "title": "Submitted at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        },
+        [
+          "idempotency_key",
+          "Idempotency key",
+          false
+        ],
+        [
+          "request_fingerprint",
+          "Request fingerprint",
+          false
+        ],
+        [
+          "credential_key",
+          "Credential key",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "agent_skills",
+      "title": "Agent skills",
+      "indexes": [
+        {
+          "name": "agent_skills_agent_id_skill_id_uk",
+          "fields": [
+            "agent_id",
+            "skill_id"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        {
+          "name": "agent",
+          "title": "Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "agent_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        {
+          "name": "skill",
+          "title": "Skill",
+          "type": "belongsTo",
+          "target": "skills",
+          "foreignKey": "skill_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        [
+          "relationship_type",
+          "Relationship type",
+          true,
+          [
+            "OWNER",
+            "MAINTAINER",
+            "USER"
+          ]
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "ACTIVE",
+            "INACTIVE"
+          ]
+        ],
+        {
+          "name": "granted_at",
+          "title": "Granted at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        },
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ]
+    },
+    {
+      "name": "releases",
+      "title": "Releases",
+      "indexes": [
+        {
+          "name": "releases_version_uk",
+          "fields": [
+            "version"
+          ],
+          "unique": true
+        },
+        {
+          "name": "releases_commit_idx",
+          "fields": [
+            "commit"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "version",
+          "Version",
+          true
+        ],
+        [
+          "commit",
+          "Commit",
+          true
+        ],
+        {
+          "name": "deployed_at",
+          "title": "Deployed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        [
+          "summary",
+          "Summary",
+          true,
+          "text"
+        ]
+      ]
+    },
+    {
+      "name": "agent_credentials",
+      "title": "Agent credentials",
+      "indexes": [
+        {
+          "name": "agent_credentials_key_uk",
+          "fields": [
+            "credential_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "credential_key",
+          "Credential key",
+          true
+        ],
+        {
+          "name": "agent",
+          "title": "Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "agent_id",
+          "targetKey": "id",
+          "allowNull": false
+        },
+        [
+          "token_hash",
+          "Token hash",
+          true
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "ACTIVE",
+            "REVOKED"
+          ]
+        ],
+        {
+          "name": "expires_at",
+          "title": "Expires at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ]
+    },
+    {
+      "name": "discussion_rooms",
+      "title": "Discussion rooms",
+      "indexes": [
+        {
+          "name": "discussion_rooms_room_key_uk",
+          "fields": [
+            "room_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "room_key",
+          "Stable Room ID",
+          true
+        ],
+        [
+          "name",
+          "Name",
+          true
+        ],
+        [
+          "topic",
+          "Topic",
+          true,
+          "text"
+        ],
+        {
+          "name": "mode",
+          "title": "Mode",
+          "type": "string",
+          "interface": "select",
+          "allowNull": false,
+          "defaultValue": "STANDARD",
+          "uiSchema": {
+            "type": "string",
+            "title": "Mode",
+            "x-component": "Select",
+            "enum": [
+              {
+                "label": "STANDARD",
+                "value": "STANDARD"
+              },
+              {
+                "label": "TURN_BASED_AI",
+                "value": "TURN_BASED_AI"
+              }
+            ]
+          }
+        },
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "OPEN",
+            "CLOSED"
+          ]
+        ]
+      ],
+      "inverses": [
+        {
+          "name": "members",
+          "title": "Members",
+          "type": "hasMany",
+          "target": "discussion_room_members",
+          "foreignKey": "room_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "issues",
+          "title": "Issues",
+          "type": "hasMany",
+          "target": "discussion_issues",
+          "foreignKey": "room_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "ai_roles",
+          "title": "AI roles",
+          "type": "hasMany",
+          "target": "discussion_ai_roles",
+          "foreignKey": "room_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "discussion_ai_roles",
+      "title": "Discussion AI roles",
+      "indexes": [
+        {
+          "name": "discussion_ai_roles_role_key_uk",
+          "fields": [
+            "role_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "discussion_ai_roles_room_order_idx",
+          "fields": [
+            "room_id",
+            "display_order"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "role_key",
+          "Stable AI Role ID",
+          true
+        ],
+        {
+          "name": "room",
+          "title": "Room",
+          "type": "belongsTo",
+          "target": "discussion_rooms",
+          "foreignKey": "room_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "CASCADE",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "display_name",
+          "Display name",
+          true
+        ],
+        [
+          "role_name",
+          "Role name",
+          true
+        ],
+        [
+          "description",
+          "Description",
+          false,
+          "text"
+        ],
+        [
+          "provider",
+          "Provider",
+          true,
+          [
+            "OPENAI",
+            "ANTHROPIC",
+            "CUSTOM"
+          ]
+        ],
+        [
+          "model",
+          "Model",
+          true
+        ],
+        [
+          "credential_ref",
+          "Credential reference",
+          false
+        ],
+        [
+          "system_prompt",
+          "System prompt",
+          false,
+          "text"
+        ],
+        {
+          "name": "enabled",
+          "title": "Enabled",
+          "type": "boolean",
+          "interface": "checkbox",
+          "allowNull": false,
+          "defaultValue": true
+        },
+        {
+          "name": "display_order",
+          "title": "Display order",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": false,
+          "defaultValue": 0
+        }
+      ]
+    },
+    {
+      "name": "discussion_room_members",
+      "title": "Discussion room members",
+      "indexes": [
+        {
+          "name": "discussion_room_members_room_key_uk",
+          "fields": [
+            "room_id",
+            "member_key"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        {
+          "name": "room",
+          "title": "Room",
+          "type": "belongsTo",
+          "target": "discussion_rooms",
+          "foreignKey": "room_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "CASCADE",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "member_key",
+          "Member key",
+          true
+        ],
+        [
+          "member_type",
+          "Member type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST"
+          ]
+        ],
+        {
+          "name": "agent",
+          "title": "Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "label",
+          "Label",
+          false
+        ]
+      ]
+    },
+    {
+      "name": "discussion_issues",
+      "title": "Discussion issues",
+      "indexes": [
+        {
+          "name": "discussion_issues_issue_key_uk",
+          "fields": [
+            "issue_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "discussion_issues_room_id_idx",
+          "fields": [
+            "room_id"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "issue_key",
+          "Stable Issue ID",
+          true
+        ],
+        {
+          "name": "room",
+          "title": "Room",
+          "type": "belongsTo",
+          "target": "discussion_rooms",
+          "foreignKey": "room_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "project",
+          "title": "Related project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "title",
+          "Title",
+          true
+        ],
+        [
+          "description",
+          "Question description",
+          true,
+          "text"
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "OPEN",
+            "DISCUSSING",
+            "READY_FOR_CONFIRMATION",
+            "CONFIRMED",
+            "PROMOTED",
+            "CLOSED"
+          ]
+        ],
+        {
+          "name": "discussion_version",
+          "title": "Discussion version",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": false,
+          "defaultValue": 0
+        },
+        [
+          "opened_by_type",
+          "Opened by type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST"
+          ]
+        ],
+        {
+          "name": "opened_by_agent",
+          "title": "Opened by Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "opened_by_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "opened_by_label",
+          "Opened by label",
+          false
+        ],
+        {
+          "name": "closed_at",
+          "title": "Closed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        }
+      ],
+      "inverses": [
+        {
+          "name": "messages",
+          "title": "Messages",
+          "type": "hasMany",
+          "target": "discussion_messages",
+          "foreignKey": "issue_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "statements",
+          "title": "Statements",
+          "type": "hasMany",
+          "target": "discussion_statements",
+          "foreignKey": "issue_id",
+          "sourceKey": "id"
+        },
+        {
+          "name": "ai_invocations",
+          "title": "AI invocations",
+          "type": "hasMany",
+          "target": "discussion_ai_invocations",
+          "foreignKey": "issue_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "discussion_messages",
+      "title": "Discussion messages",
+      "indexes": [
+        {
+          "name": "discussion_messages_issue_id_posted_at_idx",
+          "fields": [
+            "issue_id",
+            "posted_at"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "issue",
+          "title": "Issue",
+          "type": "belongsTo",
+          "target": "discussion_issues",
+          "foreignKey": "issue_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "CASCADE",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "author_type",
+          "Author type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST",
+            "AI_ROLE"
+          ]
+        ],
+        {
+          "name": "author_agent",
+          "title": "Author Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "author_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "author_role",
+          "title": "Author AI Role",
+          "type": "belongsTo",
+          "target": "discussion_ai_roles",
+          "foreignKey": "author_role_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "author_label",
+          "Author label",
+          false
+        ],
+        [
+          "body",
+          "Body",
+          true,
+          "text"
+        ],
+        {
+          "name": "generation_base_version",
+          "title": "Generation base version",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": true
+        },
+        {
+          "name": "posted_at",
+          "title": "Posted at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_statements",
+      "title": "Discussion statements",
+      "indexes": [
+        {
+          "name": "discussion_statements_statement_key_uk",
+          "fields": [
+            "statement_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "discussion_statements_issue_id_version_uk",
+          "fields": [
+            "issue_id",
+            "version"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        [
+          "statement_key",
+          "Stable Statement ID",
+          true
+        ],
+        {
+          "name": "issue",
+          "title": "Issue",
+          "type": "belongsTo",
+          "target": "discussion_issues",
+          "foreignKey": "issue_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "version",
+          "title": "Version",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": false
+        },
+        {
+          "name": "supersedes_statement",
+          "title": "Supersedes Statement",
+          "type": "belongsTo",
+          "target": "discussion_statements",
+          "foreignKey": "supersedes_statement_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "body",
+          "Statement",
+          true,
+          "text"
+        ],
+        [
+          "created_by_type",
+          "Created by type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST"
+          ]
+        ],
+        {
+          "name": "created_by_agent",
+          "title": "Created by Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "created_by_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "created_by_label",
+          "Created by label",
+          false
+        ],
+        {
+          "name": "statement_created_at",
+          "title": "Statement created at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_evidence",
+      "title": "Discussion evidence",
+      "indexes": [
+        {
+          "name": "discussion_evidence_statement_id_idx",
+          "fields": [
+            "statement_id"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "statement",
+          "title": "Statement",
+          "type": "belongsTo",
+          "target": "discussion_statements",
+          "foreignKey": "statement_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "evidence_type",
+          "Evidence type",
+          true,
+          [
+            "GITHUB_COMMIT",
+            "PROJECT_REPORT",
+            "DOCUMENT",
+            "URL",
+            "API_RESULT",
+            "CODE_REFERENCE",
+            "OTHER"
+          ]
+        ],
+        [
+          "title",
+          "Title",
+          true
+        ],
+        [
+          "reference",
+          "Reference",
+          true,
+          "text"
+        ],
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ],
+        [
+          "created_by_type",
+          "Created by type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST"
+          ]
+        ],
+        {
+          "name": "created_by_agent",
+          "title": "Created by Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "created_by_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "created_by_label",
+          "Created by label",
+          false
+        ],
+        {
+          "name": "evidence_created_at",
+          "title": "Evidence created at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_verifications",
+      "title": "Discussion verifications",
+      "indexes": [
+        {
+          "name": "discussion_verifications_statement_id_idx",
+          "fields": [
+            "statement_id"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "statement",
+          "title": "Statement",
+          "type": "belongsTo",
+          "target": "discussion_statements",
+          "foreignKey": "statement_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "verifier_type",
+          "Verifier type",
+          true,
+          [
+            "OWNER",
+            "AGENT",
+            "TEST"
+          ]
+        ],
+        {
+          "name": "verifier_agent",
+          "title": "Verifier Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "verifier_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "verifier_label",
+          "Verifier label",
+          false
+        ],
+        [
+          "result",
+          "Result",
+          true,
+          [
+            "VERIFIED",
+            "PARTIALLY_VERIFIED",
+            "NOT_VERIFIED",
+            "CONTRADICTED"
+          ]
+        ],
+        [
+          "reason",
+          "Reason",
+          true,
+          "text"
+        ],
+        {
+          "name": "verified_at",
+          "title": "Verified at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_confirmations",
+      "title": "Discussion confirmations",
+      "indexes": [
+        {
+          "name": "discussion_confirmations_statement_id_idx",
+          "fields": [
+            "statement_id"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "statement",
+          "title": "Statement",
+          "type": "belongsTo",
+          "target": "discussion_statements",
+          "foreignKey": "statement_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "confirmed_by_type",
+          "Confirmed by type",
+          true,
+          [
+            "OWNER"
+          ]
+        ],
+        [
+          "decision",
+          "Decision",
+          true,
+          [
+            "CONFIRMED",
+            "REJECTED"
+          ]
+        ],
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ],
+        {
+          "name": "confirmed_at",
+          "title": "Confirmed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_promotions",
+      "title": "Discussion promotions",
+      "indexes": [
+        {
+          "name": "discussion_promotions_statement_id_uk",
+          "fields": [
+            "statement_id"
+          ],
+          "unique": true
+        },
+        {
+          "name": "discussion_promotions_report_id_uk",
+          "fields": [
+            "project_report_id"
+          ],
+          "unique": true
+        }
+      ],
+      "fields": [
+        {
+          "name": "statement",
+          "title": "Statement",
+          "type": "belongsTo",
+          "target": "discussion_statements",
+          "foreignKey": "statement_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "confirmation",
+          "title": "Confirmation",
+          "type": "belongsTo",
+          "target": "discussion_confirmations",
+          "foreignKey": "confirmation_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "project",
+          "title": "Target Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "project_report",
+          "title": "Project Report",
+          "type": "belongsTo",
+          "target": "project_reports",
+          "foreignKey": "project_report_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "promoted_by_type",
+          "Promoted by type",
+          true,
+          [
+            "OWNER"
+          ]
+        ],
+        [
+          "report_type",
+          "Report type",
+          true,
+          [
+            "DECISION"
+          ]
+        ],
+        {
+          "name": "promoted_at",
+          "title": "Promoted at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        }
+      ]
+    },
+    {
+      "name": "discussion_ai_invocations",
+      "title": "Discussion AI invocations",
+      "indexes": [
+        {
+          "name": "discussion_ai_invocations_issue_started_idx",
+          "fields": [
+            "issue_id",
+            "started_at"
+          ],
+          "unique": false
+        },
+        {
+          "name": "discussion_ai_invocations_role_started_idx",
+          "fields": [
+            "role_id",
+            "started_at"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "issue",
+          "title": "Issue",
+          "type": "belongsTo",
+          "target": "discussion_issues",
+          "foreignKey": "issue_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "role",
+          "title": "AI role",
+          "type": "belongsTo",
+          "target": "discussion_ai_roles",
+          "foreignKey": "role_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "RESTRICT",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "provider",
+          "Provider",
+          true,
+          [
+            "OPENAI",
+            "ANTHROPIC",
+            "CUSTOM"
+          ]
+        ],
+        [
+          "model",
+          "Model",
+          true
+        ],
+        {
+          "name": "base_version",
+          "title": "Base version",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": false
+        },
+        {
+          "name": "result_version",
+          "title": "Result version",
+          "type": "integer",
+          "interface": "integer",
+          "allowNull": true
+        },
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "RUNNING",
+            "SUCCEEDED",
+            "FAILED",
+            "STALE"
+          ]
+        ],
+        {
+          "name": "started_at",
+          "title": "Started at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true,
+          "defaultToCurrentTime": true
+        },
+        {
+          "name": "finished_at",
+          "title": "Finished at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "message",
+          "title": "Generated message",
+          "type": "belongsTo",
+          "target": "discussion_messages",
+          "foreignKey": "message_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "error_code",
+          "Error code",
+          false
+        ],
+        [
+          "error_summary",
+          "Error summary",
+          false,
+          "text"
+        ]
+      ]
+    },
+    {
+      "name": "work_tasks",
+      "title": "V4 Work Tasks",
+      "indexes": [
+        {
+          "name": "work_tasks_key_uk",
+          "fields": [
+            "task_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "work_tasks_project_status_idx",
+          "fields": [
+            "project_id",
+            "status"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "task_key",
+          "Stable Task ID",
+          true
+        ],
+        [
+          "title",
+          "Title",
+          true
+        ],
+        [
+          "summary",
+          "Summary",
+          false,
+          "text"
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "OPEN",
+            "IN_PROGRESS",
+            "COMPLETED",
+            "CANCELLED"
+          ]
+        ],
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "holder_agent",
+          "title": "AI persona / holder Agent",
+          "type": "belongsTo",
+          "target": "agents",
+          "foreignKey": "holder_agent_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "holder_type",
+          "Holder type",
+          true,
+          [
+            "OUR_SIDE",
+            "AI_PERSONA",
+            "EXTERNAL",
+            "OTHER"
+          ]
+        ],
+        [
+          "holder_label",
+          "Holder label",
+          false
+        ],
+        {
+          "name": "due_at",
+          "title": "Relevant due date",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "completed_at",
+          "title": "Completed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        [
+          "completion_fact",
+          "Completion fact",
+          false,
+          "text"
+        ],
+        [
+          "source_reference",
+          "Source / audit",
+          false,
+          "text"
+        ],
+        {
+          "name": "promoted_project",
+          "title": "Promoted Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "promoted_project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        }
+      ],
+      "inverses": []
+    },
+    {
+      "name": "work_requests",
+      "title": "V4 Work Requests",
+      "indexes": [
+        {
+          "name": "work_requests_key_uk",
+          "fields": [
+            "request_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "work_requests_project_status_idx",
+          "fields": [
+            "project_id",
+            "status"
+          ],
+          "unique": false
+        },
+        {
+          "name": "work_requests_waiting_idx",
+          "fields": [
+            "waiting_since"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "request_key",
+          "Stable Request ID",
+          true
+        ],
+        [
+          "title",
+          "Title",
+          true
+        ],
+        [
+          "summary",
+          "Summary",
+          false,
+          "text"
+        ],
+        [
+          "direction",
+          "Direction",
+          true,
+          [
+            "INBOUND",
+            "OUTBOUND"
+          ]
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "OPEN",
+            "RESPONDED",
+            "COMPLETED",
+            "CANCELLED"
+          ]
+        ],
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "waiting_party_type",
+          "Waiting party type",
+          true,
+          [
+            "OUR_SIDE",
+            "AI_PERSONA",
+            "EXTERNAL_VENDOR",
+            "EXTERNAL_INSTITUTION",
+            "OTHER_DEPARTMENT",
+            "EXECUTIVE_HQ",
+            "OTHER"
+          ]
+        ],
+        [
+          "waiting_party",
+          "Waiting party",
+          true
+        ],
+        {
+          "name": "waiting_since",
+          "title": "Waiting since",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        {
+          "name": "hard_deadline",
+          "title": "Hard deadline",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        {
+          "name": "linked_task",
+          "title": "Accepted Task",
+          "type": "belongsTo",
+          "target": "work_tasks",
+          "foreignKey": "linked_task_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "completed_at",
+          "title": "Completed at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        [
+          "result",
+          "Result",
+          false,
+          "text"
+        ],
+        [
+          "source_reference",
+          "Source / audit",
+          false,
+          "text"
+        ],
+        {
+          "name": "promoted_project",
+          "title": "Promoted Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "promoted_project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        }
+      ],
+      "inverses": [
+        {
+          "name": "follow_ups",
+          "title": "Follow-ups",
+          "type": "hasMany",
+          "target": "work_follow_ups",
+          "foreignKey": "request_id",
+          "sourceKey": "id"
+        }
+      ]
+    },
+    {
+      "name": "work_follow_ups",
+      "title": "V4 Follow-ups",
+      "indexes": [
+        {
+          "name": "work_follow_ups_request_date_idx",
+          "fields": [
+            "request_id",
+            "followed_at"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "request",
+          "title": "Request",
+          "type": "belongsTo",
+          "target": "work_requests",
+          "foreignKey": "request_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "followed_at",
+          "title": "Follow-up date",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        [
+          "target",
+          "Target",
+          true
+        ],
+        [
+          "method",
+          "Method",
+          true,
+          [
+            "TEAMS",
+            "EMAIL",
+            "PHONE",
+            "MEETING_INTERVIEW",
+            "OTHER"
+          ]
+        ],
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ],
+      "inverses": []
+    },
+    {
+      "name": "work_formal_records",
+      "title": "V4 Formal Work Records",
+      "indexes": [
+        {
+          "name": "work_formal_records_key_uk",
+          "fields": [
+            "record_key"
+          ],
+          "unique": true
+        },
+        {
+          "name": "work_formal_records_project_type_date_idx",
+          "fields": [
+            "project_id",
+            "record_type",
+            "occurred_at"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        [
+          "record_key",
+          "Stable formal record ID",
+          true
+        ],
+        [
+          "record_type",
+          "Formal record type",
+          true,
+          [
+            "SUBMISSION",
+            "MILESTONE",
+            "DELIVERABLE",
+            "APPROVAL"
+          ]
+        ],
+        [
+          "title",
+          "What",
+          true
+        ],
+        [
+          "status",
+          "Status",
+          true,
+          [
+            "DRAFT",
+            "COMPLETED"
+          ]
+        ],
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "task",
+          "title": "Related Task",
+          "type": "belongsTo",
+          "target": "work_tasks",
+          "foreignKey": "task_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "request",
+          "title": "Related Request",
+          "type": "belongsTo",
+          "target": "work_requests",
+          "foreignKey": "request_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "project_report",
+          "title": "Decision Project Report",
+          "type": "belongsTo",
+          "target": "project_reports",
+          "foreignKey": "project_report_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "occurred_at",
+          "title": "Occurred / formed date",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        [
+          "from_party",
+          "From",
+          false
+        ],
+        [
+          "to_party",
+          "To",
+          false
+        ],
+        [
+          "source_reference",
+          "Source / evidence",
+          false,
+          "text"
+        ],
+        [
+          "formal_location",
+          "Formal location",
+          false,
+          "text"
+        ],
+        [
+          "artifact_version",
+          "Version",
+          false
+        ],
+        {
+          "name": "milestone",
+          "title": "Milestone relation",
+          "type": "belongsTo",
+          "target": "work_formal_records",
+          "foreignKey": "milestone_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "submission_at",
+          "title": "Submission date",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": true,
+          "timezone": true
+        },
+        [
+          "submission_to",
+          "Submission to",
+          false
+        ],
+        [
+          "decision_maker",
+          "Decision maker",
+          false
+        ],
+        [
+          "approval_result",
+          "Approval result",
+          false
+        ],
+        [
+          "approval_number",
+          "Approval / ringi number",
+          false
+        ],
+        [
+          "basis",
+          "Basis",
+          false,
+          "text"
+        ],
+        [
+          "recorded_by_type",
+          "Recorded by",
+          true,
+          [
+            "OWNER"
+          ]
+        ]
+      ],
+      "inverses": []
+    },
+    {
+      "name": "work_progress_events",
+      "title": "V4 Meaningful Progress Events",
+      "indexes": [
+        {
+          "name": "work_progress_events_source_uk",
+          "fields": [
+            "source_collection",
+            "source_id"
+          ],
+          "unique": true
+        },
+        {
+          "name": "work_progress_events_project_date_idx",
+          "fields": [
+            "project_id",
+            "occurred_at"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "project",
+          "title": "Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "fact_type",
+          "Completed fact type",
+          true,
+          [
+            "TASK_COMPLETED",
+            "REQUEST_COMPLETED",
+            "SUBMISSION_COMPLETED",
+            "MILESTONE_COMPLETED",
+            "DELIVERABLE_COMPLETED",
+            "APPROVAL_COMPLETED",
+            "RELEASE_COMPLETED"
+          ]
+        ],
+        {
+          "name": "occurred_at",
+          "title": "Occurred at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        [
+          "source_collection",
+          "Source collection",
+          true
+        ],
+        [
+          "source_id",
+          "Source ID",
+          true
+        ],
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ],
+      "inverses": []
+    },
+    {
+      "name": "work_closeout_dispositions",
+      "title": "V4 Closeout Dispositions",
+      "indexes": [
+        {
+          "name": "work_closeout_dispositions_project_idx",
+          "fields": [
+            "project_id"
+          ],
+          "unique": false
+        }
+      ],
+      "fields": [
+        {
+          "name": "project",
+          "title": "Closing Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "project_id",
+          "targetKey": "id",
+          "allowNull": false,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "task",
+          "title": "Unfinished Task",
+          "type": "belongsTo",
+          "target": "work_tasks",
+          "foreignKey": "task_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "request",
+          "title": "Unfinished Request",
+          "type": "belongsTo",
+          "target": "work_requests",
+          "foreignKey": "request_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        [
+          "disposition",
+          "Disposition",
+          true,
+          [
+            "CONTINUE",
+            "REMAIN_REQUEST",
+            "TRANSFER",
+            "PROMOTE",
+            "STOP"
+          ]
+        ],
+        {
+          "name": "target_project",
+          "title": "Target Project",
+          "type": "belongsTo",
+          "target": "projects",
+          "foreignKey": "target_project_id",
+          "targetKey": "id",
+          "allowNull": true,
+          "onDelete": "SET NULL",
+          "onUpdate": "CASCADE",
+          "constraints": true
+        },
+        {
+          "name": "recorded_at",
+          "title": "Recorded at",
+          "type": "date",
+          "interface": "datetime",
+          "allowNull": false,
+          "timezone": true
+        },
+        [
+          "note",
+          "Note",
+          false,
+          "text"
+        ]
+      ],
+      "inverses": []
+    }
+  ]
+}

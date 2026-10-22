@@ -1,0 +1,445 @@
+{
+  "role_key": "aisys-v3-discussion-service",
+  "role_name": "aisys-v3-discussion-service",
+  "role_title": "AIsys V3 Discussion Service",
+  "grants": [
+    {
+      "resource": "agents",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "agent_key",
+            "id",
+            "name"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "projects",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "name",
+            "owner_id",
+            "project_key"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "project_reports",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "idempotency_key",
+            "project_id",
+            "report_type",
+            "request_fingerprint",
+            "submitted_by_id",
+            "summary"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "credential_key",
+            "deliverable_references",
+            "idempotency_key",
+            "project_id",
+            "report_type",
+            "request_fingerprint",
+            "result_summary",
+            "submitted_at",
+            "submitted_by_id",
+            "summary"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_rooms",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "mode",
+            "name",
+            "room_key",
+            "status",
+            "topic"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "mode",
+            "name",
+            "room_key",
+            "status",
+            "topic"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_room_members",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "agent_id",
+            "id",
+            "label",
+            "member_key",
+            "member_type",
+            "room_id"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "agent_id",
+            "label",
+            "member_key",
+            "member_type",
+            "room_id"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_issues",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "closed_at",
+            "description",
+            "discussion_version",
+            "id",
+            "issue_key",
+            "opened_by_agent_id",
+            "opened_by_label",
+            "opened_by_type",
+            "project_id",
+            "room_id",
+            "status",
+            "title"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "description",
+            "issue_key",
+            "opened_by_agent_id",
+            "opened_by_label",
+            "opened_by_type",
+            "project_id",
+            "room_id",
+            "status",
+            "title"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "closed_at",
+            "status"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_messages",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "author_agent_id",
+            "author_label",
+            "author_role_id",
+            "author_type",
+            "body",
+            "generation_base_version",
+            "id",
+            "issue_id",
+            "posted_at"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "author_agent_id",
+            "author_label",
+            "author_role_id",
+            "author_type",
+            "body",
+            "generation_base_version",
+            "issue_id",
+            "posted_at"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_statements",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "body",
+            "created_by_agent_id",
+            "created_by_label",
+            "created_by_type",
+            "id",
+            "issue_id",
+            "statement_created_at",
+            "statement_key",
+            "supersedes_statement_id",
+            "version"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "body",
+            "created_by_agent_id",
+            "created_by_label",
+            "created_by_type",
+            "issue_id",
+            "statement_created_at",
+            "statement_key",
+            "supersedes_statement_id",
+            "version"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_evidence",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "created_by_agent_id",
+            "created_by_label",
+            "created_by_type",
+            "evidence_created_at",
+            "evidence_type",
+            "id",
+            "note",
+            "reference",
+            "statement_id",
+            "title"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "created_by_agent_id",
+            "created_by_label",
+            "created_by_type",
+            "evidence_created_at",
+            "evidence_type",
+            "note",
+            "reference",
+            "statement_id",
+            "title"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_verifications",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "id",
+            "reason",
+            "result",
+            "statement_id",
+            "verified_at",
+            "verifier_agent_id",
+            "verifier_label",
+            "verifier_type"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "reason",
+            "result",
+            "statement_id",
+            "verified_at",
+            "verifier_agent_id",
+            "verifier_label",
+            "verifier_type"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_confirmations",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "confirmed_at",
+            "confirmed_by_type",
+            "decision",
+            "id",
+            "note",
+            "statement_id"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "confirmed_at",
+            "confirmed_by_type",
+            "decision",
+            "note",
+            "statement_id"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_promotions",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "confirmation_id",
+            "id",
+            "project_id",
+            "project_report_id",
+            "promoted_at",
+            "promoted_by_type",
+            "report_type",
+            "statement_id"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "confirmation_id",
+            "project_id",
+            "project_report_id",
+            "promoted_at",
+            "promoted_by_type",
+            "report_type",
+            "statement_id"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_ai_roles",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "credential_ref",
+            "description",
+            "display_name",
+            "display_order",
+            "enabled",
+            "id",
+            "model",
+            "provider",
+            "role_key",
+            "role_name",
+            "room_id",
+            "system_prompt"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "credential_ref",
+            "description",
+            "display_name",
+            "display_order",
+            "enabled",
+            "model",
+            "provider",
+            "role_key",
+            "role_name",
+            "room_id",
+            "system_prompt"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "credential_ref",
+            "description",
+            "display_name",
+            "display_order",
+            "enabled",
+            "model",
+            "provider",
+            "role_name",
+            "system_prompt"
+          ]
+        }
+      ]
+    },
+    {
+      "resource": "discussion_ai_invocations",
+      "actions": [
+        {
+          "name": "view",
+          "fields": [
+            "base_version",
+            "error_code",
+            "error_summary",
+            "finished_at",
+            "id",
+            "issue_id",
+            "message_id",
+            "model",
+            "provider",
+            "result_version",
+            "role_id",
+            "started_at",
+            "status"
+          ]
+        },
+        {
+          "name": "create",
+          "fields": [
+            "base_version",
+            "issue_id",
+            "model",
+            "provider",
+            "role_id",
+            "started_at",
+            "status"
+          ]
+        },
+        {
+          "name": "update",
+          "fields": [
+            "error_code",
+            "error_summary",
+            "finished_at",
+            "message_id",
+            "result_version",
+            "status"
+          ]
+        }
+      ]
+    }
+  ]
+}

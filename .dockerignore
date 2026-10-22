@@ -1,0 +1,25 @@
+# The image builds its own dependencies and its own .next output. Copying the
+# host's over them is not merely slow: node_modules carries binaries built for
+# the host's OS and CPU, so a build run on a developer machine ships those into
+# the image and the container starts against the wrong native artifacts. CI
+# checks out clean and never hits this, which is why it went unnoticed.
+**/node_modules
+**/.next
+**/test-results
+**/tsconfig.tsbuildinfo
+**/*.tsbuildinfo
+
+# Local-only state that must never reach a build layer.
+.env
+storage/
+secrets/
+tls/
+backups/
+.verify-local/
+
+# Repository history is not part of the runtime image.
+.git
+.github
+
+# Never send private installer credentials/data to the image builder.
+.private-install/

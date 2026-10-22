@@ -1,0 +1,36 @@
+.env
+storage/
+
+# Local editor and operating-system files
+.DS_Store
+Thumbs.db
+
+# Node install and build output
+node_modules/
+output/playwright/
+.playwright-cli/
+web/.next/
+/web/node_modules.*/
+web/test-results/
+web/tsconfig.tsbuildinfo
+agent-project-writeback-state.json
+
+# In-stack TLS material lives on the deployment host only.
+tls/
+
+# tools/verify-local's own logs and root-level report are transient, one per
+# run. A copy meant to be kept is committed deliberately under
+# docs/pr-review/<branch>/verify-local-report.md (see docs/ci-local-verify.md).
+.verify-local/
+/verify-local-report.md
+tools/verify-local/logs/
+
+# Protected source configuration and secret material. Never commit real
+# credentials; this repository ships no placeholder file to allowlist here.
+secrets/*
+
+# Carried over from the pre-Bootstrap strategy-only repository.
+.codex-build/
+
+# Isolated private installer state: credentials, database, uploads and logs.
+/.private-install/
